@@ -130,7 +130,7 @@ const gameFlow = {
             }
         }
         if (array[0] == array[4] && array[0] == array[8] && array[0] !=null) this.checkwinner(0);
-        else if (array[2] == array[4] && array[2] == array[8] && array[2]!=null) this.checkwinner(2);
+        else if (array[2] == array[4] && array[2] == array[6] && array[2]!=null) this.checkwinner(2);
     },
 
     checkwinner : function(index){

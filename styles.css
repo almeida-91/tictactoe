@@ -73,11 +73,21 @@ button {
 
 @media only screen and (max-width: 600px) {
     #game {
-        width: 500px;
+        width: 400px;
         height: 600px;
+        margin: 10px;
     }
 
     .whitespace {
         font-size: 50px;
+    }
+
+    *{
+        box-sizing: border-box;
+    }
+
+    body {
+        height: 100%;
+        width: 100%;
     }
 }

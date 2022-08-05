@@ -4,8 +4,8 @@ body {
 }
 
 .whitespace { 
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,4 +20,6 @@ body {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: repeat(3,250px);
     gap: 15px;
+    background-color: white;
+    visibility:hidden;
 }

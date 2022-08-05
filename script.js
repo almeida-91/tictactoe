@@ -11,6 +11,7 @@ const gameBoardObj = {
             game.removeChild(game.firstChild);
         };
         this.gameBoard.forEach(this.render);
+        game.style.visibility = 'visible';
         gameFlow.playturn();
     },
 
@@ -115,10 +116,15 @@ const gameFlow = {
         let i = 0;
         let array = gameBoardObj.gameBoard;
         console.log(array[i]==array[i+1] && array[i+1]==array[i+2]);
-        if ((array[i]==array[i+1]==array[i+2] && i%3 == 0) 
-            || (array[i] == array[i+3] == array[i+6])){
-            this.checkwinner(i);
+        for (i=0; i<array.length ; i++){
+            if ((array[i] == array[i+1] && array[i]==array[i+2] && i%3 == 0 && array[i] !=null ) 
+            || (array[i] == array[i+3] && array[i]== array[i+6] && array[i]!=null))
+            {
+                this.checkwinner(i);
+            }
         }
+        if (array[0] == array[4] && array[0] == array[8] && array[0] !=null) this.checkwinner(0);
+        else if (array[2] == array[4] && array[2] == array[8] && array[2]!=null) this.checkwinner(2);
     },
 
     checkwinner : function(index){

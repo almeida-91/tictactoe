@@ -3,7 +3,9 @@ const startButton = document.getElementById('start');
 const resetButton = document.getElementById('reset');
 
 const gameBoardObj = {
+
     gameBoard : [null,null,null,null,null,null,null,null,null],
+
     start : function startGame() {
         while (game.firstChild){
             game.removeChild(game.firstChild);
@@ -11,6 +13,7 @@ const gameBoardObj = {
         this.gameBoard.forEach(this.render);
         gameFlow.playturn();
     },
+
     render : function renderGame(item){     //renders the game board according to the array
         let square = document.createElement(`div`);
         square.className = 'whitespace';
@@ -18,11 +21,13 @@ const gameBoardObj = {
         else if (item == 'o') square.textContent = 'O';
         game.appendChild(square);
     },
+
     reset : function resetGame(){
         square = document.getElementsByClassName('whitespace');
         while (game.firstChild){
             game.removeChild(game.firstChild);
         }
+
         this.gameBoard.forEach(this.restart);
         this.gameBoard.forEach(this.render);
         gameFlow.turn = 'player1';
@@ -33,10 +38,13 @@ const gameBoardObj = {
         array[index] = null;
         gameBoardObj.start;
     },
+
 };
 
 const player1 = {
+
     name : 'Player',
+
     play : function player1Play() {
         let board = document.getElementsByClassName('whitespace');
         Array.from(board).forEach((item, index, array)=>{
@@ -45,10 +53,13 @@ const player1 = {
         
     },
 
-    addPlayspace : function (_item, index, array) { // turns each whitespace into playable space
+    addPlayspace : function (item, index, array) { // turns each whitespace into playable space
         array[index].addEventListener('click', function() {
-            gameBoardObj.gameBoard[index] = 'x';
-            console.log('success');
+            if (gameBoardObj.gameBoard[index] == null ) gameBoardObj.gameBoard[index] = 'x';
+            else {
+                player2.addPlayspace(item, index, array);
+                gameFlow.turn = 'player1';
+            };
             gameBoardObj.start();
         });
     },
@@ -56,7 +67,9 @@ const player1 = {
 };
 
 const player2 = {
+
     name: 'CPU',
+
     play : function player1Play() {
         let board = document.getElementsByClassName('whitespace');
         Array.from(board).forEach((item, index, array)=>{
@@ -65,9 +78,13 @@ const player2 = {
         
     },
 
-    addPlayspace : function (_item, index, array) { // turns each whitespace into playable space
+    addPlayspace : function (item, index, array) { // turns each whitespace into playable space
         array[index].addEventListener('click', function() {
-            gameBoardObj.gameBoard[index] = 'o';
+            if (gameBoardObj.gameBoard[index] == null ) gameBoardObj.gameBoard[index] = 'o';
+            else {
+                player2.addPlayspace(item, index, array);
+                gameFlow.turn = 'player2';
+            };
             gameBoardObj.start();
         });
     },
@@ -80,18 +97,33 @@ const gameFlow = {
 
     } */
     turn : 'player1',
+
     playturn : function(){
         if (this.turn == 'player1'){ 
             player1.play();
+            gameFlow.checkwin();
             this.turn = 'player2';
         } else if (this.turn == 'player2'){
             player2.play();
+            gameFlow.checkwin();
             this.turn = 'player1';
         };
-
     },
-    checkwin : function(){
 
+    checkwin : function(){
+        console.log('success!');
+        let i = 0;
+        let array = gameBoardObj.gameBoard;
+        console.log(array[i]==array[i+1] && array[i+1]==array[i+2]);
+        if ((array[i]==array[i+1]==array[i+2] && i%3 == 0) 
+            || (array[i] == array[i+3] == array[i+6])){
+            this.checkwinner(i);
+        }
+    },
+
+    checkwinner : function(index){
+        if (gameBoardObj.gameBoard[index] == 'x') alert (`Winner : ${player1.name}`);
+        else if (gameBoardObj.gameBoard[index] == 'o') alert (`Winner : ${player2.name}`);
     },
 
 };

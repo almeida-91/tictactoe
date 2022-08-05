@@ -18,8 +18,14 @@ const gameBoardObj = {
     render : function renderGame(item){     //renders the game board according to the array
         let square = document.createElement(`div`);
         square.className = 'whitespace';
-        if (item == 'x') square.textContent = 'X';
-        else if (item == 'o') square.textContent = 'O';
+        if (item == 'x'){
+             square.textContent = 'X';
+             square.style.color = 'blue';
+        }
+        else if (item == 'o'){
+            square.textContent = 'O';
+            square.style.color = 'red';
+        }
         game.appendChild(square);
     },
 

@@ -70,3 +70,14 @@ button {
     background-color: rgb(255, 47, 47);
 
 }
+
+@media only screen and (max-width: 600px) {
+    #game {
+        width: 500px;
+        height: 600px;
+    }
+
+    .whitespace {
+        font-size: 50px;
+    }
+}

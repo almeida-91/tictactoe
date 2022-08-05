@@ -38,7 +38,7 @@ h1 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: repeat(3,1fr);
-    gap: 15px;
+    gap: 10px;
     background-color: white;
     visibility:hidden;
     height: 600px;
@@ -71,6 +71,11 @@ button {
 
 }
 
+#winnerPanel {
+    visibility: hidden;
+    font-size: 100px;
+}
+
 @media only screen and (max-width: 600px) {
     #game {
         width: 400px;
@@ -83,7 +88,7 @@ button {
     }
 
     *{
-        box-sizing: border-box;
+        /*box-sizing: border-box;*/
     }
 
     body {

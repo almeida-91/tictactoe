@@ -173,7 +173,6 @@ const gameFlow = {
             winnerPanel.style.visibility='visible';
             gameFlow.turn = null;
             gameBoardObj.gameBoard.forEach((item, index)=>{
-                console.log(gameBoardObj.gameBoard[index]);
                 if (gameBoardObj.gameBoard[index] == null) gameBoardObj.gameBoard[index] = 1;
                 return 1;
             });

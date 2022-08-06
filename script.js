@@ -117,7 +117,6 @@ const player2 = {
         let bestScore = -Infinity;
         let bestMove;
         for ( let i=0;i<currentBoard.length;i++){
-            console.log[i];
             if (typeof(currentBoard[i])=='number'){
                 currentBoard[i] = 'o';
                 let score = this.miniMax(currentBoard,0,false);
@@ -128,7 +127,6 @@ const player2 = {
                 }
             }
         }
-        console.log("Best Move: "+bestMove);
         return bestMove;
     },
 
@@ -137,8 +135,8 @@ const player2 = {
         let i = 0;
         if (gameFlow.checkwin(board)!= null){
             if (gameFlow.checkwin(board)==10) score = 0;
-            else if (board[gameFlow.checkwin(board)]=='x') score = -10 - depth ;
-            else if (board[gameFlow.checkwin(board)]=='o') score = 10+depth;
+            else if (board[gameFlow.checkwin(board)]=='x') score = -10 + depth ;
+            else if (board[gameFlow.checkwin(board)]=='o') score = 10 - depth;
             return score;
         }
 
@@ -149,7 +147,7 @@ const player2 = {
                     board[i] = 'o';
                     score = this.miniMax(board, depth+1,false);
                     board[i] = i;
-                    if (score >bestScore) bestScore=score;
+                    if (score > bestScore) bestScore=score;
                 }
             }
             return bestScore;
@@ -176,7 +174,7 @@ const gameFlow = {
         let array = gameBoard.filter((item)=>typeof(item)=='number');
         let i = 0;
         for (i=0; i<gameBoard.length; i++){
-            if ((gameBoard[i] == gameBoard[i+1] && gameBoard[i]==gameBoard[i+2] && i%3 == 0 && gameBoard[i] !=i ) 
+            if ((gameBoard[i] == gameBoard[i+1] && gameBoard[i]==gameBoard[i+2] && i%3 == 0 && gameBoard[i] !=i && (gameBoard[i]!=null)) 
             || (gameBoard[i] == gameBoard[i+3] && gameBoard[i]== gameBoard[i+6] && gameBoard[i]!=i)){
                 return i;
             }
@@ -195,7 +193,10 @@ const gameFlow = {
     },
 
     displayVictor: function(index){
-
+        let j=0;
+        for (j=0;j<gameBoardObj.gameBoard.length;j++){
+            if(typeof(gameBoardObj.gameBoard[j])=='number') gameBoardObj.gameBoard[j] = null;
+        }
         if (gameBoardObj.gameBoard[index] == 'x'){
             winnerPanel.textContent = 'You Win!';
             winnerPanel.style.color = 'blue';

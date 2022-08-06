@@ -175,14 +175,14 @@ const gameFlow = {
         let i = 0;
         for (i=0; i<gameBoard.length; i++){
             if ((gameBoard[i] == gameBoard[i+1] && gameBoard[i]==gameBoard[i+2] && i%3 == 0 && gameBoard[i] !=i && (gameBoard[i]!=null)) 
-            || (gameBoard[i] == gameBoard[i+3] && gameBoard[i]== gameBoard[i+6] && gameBoard[i]!=i)){
+            || (gameBoard[i] == gameBoard[i+3] && gameBoard[i]== gameBoard[i+6] && gameBoard[i]!=i)&& (gameBoard[i]!=null)){
                 return i;
             }
         }
-        if (gameBoard[0] == gameBoard[4] && gameBoard[0] == gameBoard[8] && gameBoard[0] !=0){
+        if (gameBoard[0] == gameBoard[4] && gameBoard[0] == gameBoard[8] && gameBoard[0] !=0 && (gameBoard[0]!=null)){
             return 0;
         }
-        else if (gameBoard[2] == gameBoard[4] && gameBoard[2] == gameBoard[6] && gameBoard[2]!=2){
+        else if (gameBoard[2] == gameBoard[4] && gameBoard[2] == gameBoard[6] && gameBoard[2]!=2 && (gameBoard[2]!=null)){
             return 2;
         }
         if (array.length == 0){

@@ -3,10 +3,13 @@ const startButton = document.getElementById('start');
 const resetButton = document.getElementById('reset');
 const winnerPanel = document.getElementById('winnerPanel');
 const restartButton = document.getElementById('restartGame');
+const difficulty = document.getElementById('diff');
 
 const gameBoardObj = {
 
-    gameBoard : [null,null,null,null,null,null,null,null,null],
+    gameBoard : [0,1,2,3,4,5,6,7,8],
+    cpuMark : 'o',
+    playerMark : 'x',
 
     start : function startGame() {
         while (game.firstChild){
@@ -18,7 +21,7 @@ const gameBoardObj = {
         else winnerPanel.style.visibility = 'hidden';
             winnerPanel.style.visibility = 'hidden';
         game.style.visibility = 'visible';
-        gameFlow.playturn();
+        player1.play();
     },
 
     render : function renderGame(item){     //renders the game board according to the array
@@ -45,11 +48,11 @@ const gameBoardObj = {
         this.gameBoard.forEach(this.restart);
         this.gameBoard.forEach(this.render);
         gameFlow.turn = 'player1';
-        gameFlow.playturn();
+        player1.play();
     },
     
     restart : (_item, index, array) => {
-        array[index] = null;
+        gameBoardObj.gameBoard[index] = index;
         gameBoardObj.start;
     },
 
@@ -64,22 +67,20 @@ const player1 = {
         Array.from(board).forEach((item, index, array)=>{
             this.addPlayspace(item, index, array);
         });
-        
     },
 
     addPlayspace : function (item, index, array) { // turns each whitespace into playable space
         array[index].addEventListener('click', function() {
-            if (gameBoardObj.gameBoard[index] == null ){
+            if (typeof(gameBoardObj.gameBoard[index]) == 'number' ){
                 gameBoardObj.gameBoard[index] = 'x';
                 gameFlow.turn = 'player2';
-                
+                player2.play();
             } else {
                 gameFlow.turn = 'player1';
                 player1.addPlayspace(item, index, array);
             };
             gameBoardObj.start();
-            gameFlow.checkdraw();
-            gameFlow.checkwin();
+            if(gameFlow.checkwin(gameBoardObj.gameBoard)!= null) gameFlow.displayVictor(gameFlow.checkwin(gameBoardObj.gameBoard));
         });
     },
 
@@ -90,19 +91,83 @@ const player2 = {
     name: 'CPU',
 
     play : function player2Play() {
-        if ( gameFlow.checkwin() == 1 || gameFlow.checkdraw()==1) return 0;
-        let i = (Math.random()*8).toFixed(0);
-        if (gameBoardObj.gameBoard[i] == null && gameBoardObj.gameBoard[i] != 1){
+        let board = gameBoardObj.gameBoard;
+        if ( gameFlow.checkwin(gameBoardObj.gameBoard) != null) return 0;
+        if (difficulty.value == 'unbeatable'){
+            i = player2.findBestMove(board);
             gameBoardObj.gameBoard[i] = 'o';
             gameFlow.turn = 'player1';
-            gameBoardObj.start();
-            gameFlow.checkdraw();
-            gameFlow.checkwin();
+            player1.play();
         }
-        else player2.play();
-
+        else {
+            let i = (Math.random()*8).toFixed(0);
+            if (typeof(gameBoardObj.gameBoard[i]) == 'number'){
+                gameBoardObj.gameBoard[i] = 'o';
+                gameFlow.turn = 'player1';
+            }
+            else player2.play();
+        }
         gameBoardObj.start();
+        if(gameFlow.checkwin(gameBoardObj.gameBoard)!= null) gameFlow.displayVictor(gameFlow.checkwin(gameBoardObj.gameBoard));
         return 0;  
+    },
+
+    findBestMove : function(currentBoard){
+        let i = 0;
+        let bestScore = -Infinity;
+        let bestMove;
+        for ( let i=0;i<currentBoard.length;i++){
+            console.log[i];
+            if (typeof(currentBoard[i])=='number'){
+                currentBoard[i] = 'o';
+                let score = this.miniMax(currentBoard,0,true);
+                currentBoard[i] = i;
+                if (score>bestScore){
+                    bestScore = score;
+                    bestMove = i;
+                }
+            }
+        }
+        console.log("Best Move: "+bestMove);
+        return bestMove;
+    },
+
+    miniMax : function(board, depth, maxingPlayer){
+        let score = 0;
+        let i = 0;
+        if (gameFlow.checkwin(board)!= null){
+            if (gameFlow.checkwin(board)==10) score = 0;
+            else if (board[gameFlow.checkwin(board)]=='x') score = -1;
+            else if (board[gameFlow.checkwin(board)]=='o') score = 1;
+            return score;
+        }
+        
+        
+
+
+        if (maxingPlayer==true){
+            let bestScore = -Infinity;
+            for (let i=0;i<board.length;i++){
+                if (typeof(board[i])=='number'){
+                    board[i] = 'x';
+                    score = this.miniMax(board, depth+1,false);
+                    board[i] = i;
+                    if (score >bestScore) bestScore=score;
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = Infinity;
+            for (let i=0;i<board.length;i++){
+                if (typeof(board[i])=='number'){
+                    board[i] = 'o';
+                    score = this.miniMax(board, depth+1,true);
+                    board[i] = i;
+                    if (score < bestScore) bestScore=score;
+                }
+            }
+            return bestScore;
+        } 
     },
 }
 
@@ -110,78 +175,54 @@ const player2 = {
 const gameFlow = {
     turn : 'player1',
 
-    playturn : function(){
-        if (this.turn == 'player1'){ 
-            player1.play();
-            gameFlow.checkwin();
-            this.checkdraw();
-            
-        } else if (this.turn == 'player2'){
-            player2.play();
-            gameFlow.checkwin();
-            this.checkdraw();
-        };
-    },
-
-    checkwin : function(){
+    checkwin : function(gameBoard){
+        let array = gameBoard.filter((item)=>typeof(item)=='number');
         let i = 0;
-        let array = gameBoardObj.gameBoard;
-        for (i=0; i<array.length ; i++){
-            if ((array[i] == array[i+1] && array[i]==array[i+2] && i%3 == 0 && array[i] !=null ) 
-            || (array[i] == array[i+3] && array[i]== array[i+6] && array[i]!=null))
-            {
-                this.checkwinner(i);
-                return 1;
+        for (i=0; i<gameBoard.length; i++){
+            if ((gameBoard[i] == gameBoard[i+1] && gameBoard[i]==gameBoard[i+2] && i%3 == 0 && gameBoard[i] !=i ) 
+            || (gameBoard[i] == gameBoard[i+3] && gameBoard[i]== gameBoard[i+6] && gameBoard[i]!=i)){
+                return i;
             }
         }
-        if (array[0] == array[4] && array[0] == array[8] && array[0] !=null){
-             this.checkwinner(0);
-             return 1;
+        if (gameBoard[0] == gameBoard[4] && gameBoard[0] == gameBoard[8] && gameBoard[0] !=0){
+            return 0;
         }
-        else if (array[2] == array[4] && array[2] == array[6] && array[2]!=null){
-            this.checkwinner(2);
-            return 1;
+        else if (gameBoard[2] == gameBoard[4] && gameBoard[2] == gameBoard[6] && gameBoard[2]!=2){
+            return 2;
         }
-        return 0;
+        if (array.length == 0){
+            this.displayVictor(null);
+            return 10;
+        }
+        return null;
     },
 
-    checkdraw : function (){
-        let i = gameBoardObj.gameBoard.some((element)=> element == null);
-        if (i==false && gameFlow.checkwin() == 0){
-            winnerPanel.textContent = `It's a Draw!`
-            winnerPanel.style.color = 'yellow';
-            winnerPanel.style.visibility = 'visible';
-            gameFlow.turn = null;
-            return 1;
-        }
-    },
+    displayVictor: function(index){
 
-    checkwinner : function(index){
         if (gameBoardObj.gameBoard[index] == 'x'){
             winnerPanel.textContent = 'You Win!';
             winnerPanel.style.color = 'blue';
             winnerPanel.style.visibility='visible';
             gameFlow.turn = null;
-            gameBoardObj.gameBoard.forEach((item,index)=>{
-                if (gameBoardObj.gameBoard[index] == null) gameBoardObj.gameBoard[index] = 1;
-                return 1;
-            });
-            
+            return -1;
         } else if (gameBoardObj.gameBoard[index] == 'o') {
             winnerPanel.textContent = 'CPU Wins!';
             winnerPanel.style.color = 'red';
             winnerPanel.style.visibility='visible';
             gameFlow.turn = null;
-            gameBoardObj.gameBoard.forEach((item, index)=>{
-                if (gameBoardObj.gameBoard[index] == null) gameBoardObj.gameBoard[index] = 1;
-                return 1;
-            });
+            return 1;
+
+        } else if (index==null){
+            winnerPanel.textContent = `It's a Draw!`
+            winnerPanel.style.color = 'yellow';
+            winnerPanel.style.visibility = 'visible';
+            gameFlow.turn = null;
+            return 0;
         }
         return 0;
     },
+}
 
-};
 
-
-startButton.addEventListener(`click`,gameBoardObj.start.bind(gameBoardObj)); //Add event listeners
+startButton.addEventListener(`click`,gameBoardObj.start.bind(gameBoardObj))
 resetButton.addEventListener(`click`,gameBoardObj.reset.bind(gameBoardObj)); //Bound to construct

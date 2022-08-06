@@ -18,6 +18,7 @@ h1 {
 .button-container{
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 
@@ -52,6 +53,16 @@ button {
     color: white;
     font-weight: 700;
     margin: 20px;
+}
+
+label {
+    font-family: sans-serif;
+    margin-right: 10px;
+}
+
+select {
+    background-color: black;
+    color: white;
 }
 
 #start {

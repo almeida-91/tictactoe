@@ -120,7 +120,7 @@ const player2 = {
             console.log[i];
             if (typeof(currentBoard[i])=='number'){
                 currentBoard[i] = 'o';
-                let score = this.miniMax(currentBoard,0,true);
+                let score = this.miniMax(currentBoard,0,false);
                 currentBoard[i] = i;
                 if (score>bestScore){
                     bestScore = score;
@@ -137,19 +137,16 @@ const player2 = {
         let i = 0;
         if (gameFlow.checkwin(board)!= null){
             if (gameFlow.checkwin(board)==10) score = 0;
-            else if (board[gameFlow.checkwin(board)]=='x') score = -1;
-            else if (board[gameFlow.checkwin(board)]=='o') score = 1;
+            else if (board[gameFlow.checkwin(board)]=='x') score = -10 - depth ;
+            else if (board[gameFlow.checkwin(board)]=='o') score = 10+depth;
             return score;
         }
-        
-        
-
 
         if (maxingPlayer==true){
             let bestScore = -Infinity;
             for (let i=0;i<board.length;i++){
                 if (typeof(board[i])=='number'){
-                    board[i] = 'x';
+                    board[i] = 'o';
                     score = this.miniMax(board, depth+1,false);
                     board[i] = i;
                     if (score >bestScore) bestScore=score;
@@ -157,10 +154,10 @@ const player2 = {
             }
             return bestScore;
         } else {
-            let bestScore = Infinity;
+            let bestScore = +Infinity;
             for (let i=0;i<board.length;i++){
                 if (typeof(board[i])=='number'){
-                    board[i] = 'o';
+                    board[i] = 'x';
                     score = this.miniMax(board, depth+1,true);
                     board[i] = i;
                     if (score < bestScore) bestScore=score;
